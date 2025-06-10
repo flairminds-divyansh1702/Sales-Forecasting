@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import HTMLResponse
+from fastapi.responses import StreamingResponse
+import io
 from models.responsemodels import ForecastResponse
 from models.requestmodels import ForecastRequest
 import pandas as pd
@@ -118,7 +119,14 @@ async def generate_forecast(request: ForecastRequest):
 
         # At the end of generate_forecast:
         html = fig.to_html(full_html=True, include_plotlyjs='cdn')
-        return HTMLResponse(content=html)
+        html_bytes = io.BytesIO(html.encode("utf-8"))
+        return StreamingResponse(
+            html_bytes,
+            media_type="text/html",
+            headers={
+                "Content-Disposition": f'attachment; filename="forecast.html"'
+            }
+        )
 
         
         # return ForecastResponse(

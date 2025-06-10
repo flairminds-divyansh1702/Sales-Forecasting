@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import StreamingResponse
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from models.requestmodels import ComparisonRequest
 import pandas as pd
 import plotly.graph_objects as go
 import state
+import io
 
 router = APIRouter()
 
@@ -110,7 +111,14 @@ async def forecast_comparison(request: ComparisonRequest):
             }
         
         html = fig.to_html(full_html=True, include_plotlyjs='cdn')
-        return HTMLResponse(content=html)
+        html_bytes = io.BytesIO(html.encode("utf-8"))
+        return StreamingResponse(
+            html_bytes,
+            media_type="text/html",
+            headers={
+                "Content-Disposition": f'attachment; filename="forecast_comparison.html"'
+            }
+        )
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating comparison: {str(e)}")
