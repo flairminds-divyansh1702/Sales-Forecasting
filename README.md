@@ -4,6 +4,7 @@ This repository is to create time series sales forecasting for the given dataset
 **To run this repository:**
 
 Step 1: Install the requirements from requirements.txt using the command "pip install -r requirements.txt".
+
 Step 2: To start the server enter the command "uvicorn app:app --reload".
 
 **Workflow of the code is:**
@@ -40,4 +41,4 @@ curl --location 'http://127.0.0.1:8000/compare/forecast-comparison' \
 }'
 
 To look for the visual results of Forecast and Forecast Comparison in postman, instead of pressing send press "Send and Download".
-This will download the html file which when opened, will show the charts of the forecast.
+This will download the html file which when opened, will show the interactive charts of the forecast.
